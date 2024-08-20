@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import HitResults from "./HitResults";
 
 
-const client = algoliasearch('PT2XCZUVLX', '93884bad811c587038992d98cc0767c1');
+const client = algoliasearch(import.meta.env.VITE_CLIENT_KEY, import.meta.env.VITE_CLIENT_TOKEN);
 const index = client.initIndex('failed_products');
 
 export const Search = () => {
@@ -23,7 +23,6 @@ export const Search = () => {
     }, [searchParams]); 
 
     const handleAddToCart = (newItem) => {
-      console.log("Recieved from child: ", newItem)
       setCartCounter(cartCounter + 1);
       setCartTotal(cartTotal + newItem.price)
     }
@@ -51,7 +50,7 @@ export const Search = () => {
 </label>
       <div className="grid grid-cols-2 gap-4 xl:grid-cols-3">
         {results.map((result) => (
-          <HitResults hit={result} onBuyNow={handleAddToCart}/> 
+          <HitResults key={result.objectID} hit={result} onBuyNow={handleAddToCart}/> 
             
         ))}
       </div>

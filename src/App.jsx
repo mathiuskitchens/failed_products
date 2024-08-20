@@ -3,8 +3,7 @@ import "instantsearch.css/themes/satellite.css";
 import { useState, useEffect } from "react";
 import HitResults from "./HitResults";
 
-
-const client = algoliasearch('PT2XCZUVLX', '93884bad811c587038992d98cc0767c1');
+const client = algoliasearch(import.meta.env.VITE_CLIENT_KEY, import.meta.env.VITE_CLIENT_TOKEN);
 const index = client.initIndex('failed_products');
 
 
@@ -34,14 +33,13 @@ useEffect(() => {
 const handleFinalCart = (newItem) => {
   setCartCounter(cartCounter + 1);
   setCartTotal(cartTotal + newItem.Price)
-  console.log("Recieved to top parent: ", newItem)
 }
 
   return (
     <>
     <div className="navbar bg-base-100">
   <div className="flex-1">
-    <a className="text-3xl btn btn-ghost">Failed Products Warehouse</a>
+    <a className="text-xl md:text-3xl btn btn-ghost">Failed Products Warehouse</a>
   </div>
   <div className="flex-none m-4">
     <div className="dropdown dropdown-end">
@@ -70,17 +68,16 @@ const handleFinalCart = (newItem) => {
           <span className="text-info">Subtotal: ${cartTotal}</span>
           <div className="card-actions">
             <button className="btn btn-primary btn-block" onClick={() => {
-              if(counter <= 2) {
+              if(counter <= 1) {
                 setCounter(counter + 1)
-              } else if (counter === 3){
-                setCounter(0)
-                setCartTotal(0)
-                setCartCounter(0)
-              } else {
-                setCounter(0)
-                setCartTotal(0)
-                setCartCounter(0)
-              }
+              } else if (counter === 2){
+                setCounter(counter + 1)
+                setTimeout(() => {
+                  setCounter(0)
+                  setCartCounter(0)
+                  setCartTotal(0) 
+                }, 2000)
+              } 
             }}>{checkoutFunnies[counter]}</button>
           </div>
         </div>
@@ -111,7 +108,7 @@ const handleFinalCart = (newItem) => {
   <input 
     type="text" 
     className="grow" 
-    placeholder="Search" 
+    placeholder="Find something useless" 
     onChange={(e) => {
         setSearchParams(e.target.value);
   }} />
@@ -126,9 +123,9 @@ const handleFinalCart = (newItem) => {
       clipRule="evenodd" />
   </svg>
 </label>
-      <div className="grid grid-cols-2 gap-4 xl:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
         {results.map((result) => (
-          <HitResults hit={result} onBuyNow={handleFinalCart}/> 
+          <HitResults key={result.ID} hit={result} onBuyNow={handleFinalCart}/> 
             
         ))}
       </div>
